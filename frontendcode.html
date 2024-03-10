@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Platform</title>
+</head>
+<body>
+    <h1>Welcome to the Talent Platform</h1>
+    <h2>User Registration</h2>
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="skills">Skills (comma-separated):</label><br>
+    <input type="text" id="skills" name="skills"><br><br>
+    <button onclick="registerUser()">Register</button>
+
+    <script>
+        async function registerUser() {
+            const name = document.getElementById("name").value;
+            const skills = document.getElementById("skills").value.split(",");
+
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                const account = accounts[0];
+                const contractAddress = 'CONTRACT_ADDRESS'; // Replace with your contract address
+                const contractABI = []; // Replace with your contract ABI
+                const contract = new ethers.Contract(contractAddress, contractABI, ethereum.selectedProvider);
+                const tx = await contract.registerUser(name, skills, { from: account });
+                await tx.wait();
+                alert("User registered successfully!");
+            } catch (error) {
+                console.error("Error registering user:", error);
+                alert("Failed to register user. Please check the console for details.");
+            }
+        }
+    </script>
+</body>
+</html>
